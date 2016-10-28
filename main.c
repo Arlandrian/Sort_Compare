@@ -10,9 +10,9 @@ void swap(int *a,int *b);
 void merge(int *arr, int low, int mid, int high);
 void arr_print(int *arr,int N);
 int main(int argc, char *argv[]) {
-	//Bütün surelerin tutuldugu matris 1. sutun merge,2.sutun selection,3.sutun Bubble 
-	float **sure1,*toplam1;
-	float sure[9][2],toplam[2]={0,0,0};
+	//BÃ¼tÃ¼n surelerin tutuldugu matris 1. sutun merge,2.sutun selection,3.sutun Bubble **sure
+	float toplam[2]={0,0,0};
+	float **sure;
 	//N alinan sayi,ijk for donguler icin degiskenler,toplam ortalama hesaplamasi icin kullanilan dizi
 	int N,j,i,k,kac_kere;//kac_kere=>sortlari kac kere yapilacagini tutan degisken
 	int sort;
@@ -31,30 +31,24 @@ int main(int argc, char *argv[]) {
 	if(!temp_dizi){
 		printf("Bellekte yeterli yer yok.");
 	}
-/*	
+
 	printf("\n");
 	printf("Kac farkli sort suresi olcmek istersiniz?\n");
 	scanf("%d",&kac_kere);
-	//sureleri tutacagimiz matrisi olusturduk
+	//sureleri tutacagimiz matrisi olusturuyoruz(sure[kac_kere][2])
+	
 	sure=(float**)malloc(sizeof(float*)*kac_kere);
 	if(!kac_kere){
 		printf("bellek yetersiz");
 	}
 	for( i = 0; i < kac_kere; i++ ) {
-		sure[i] = (float*)malloc( 3 * sizeof(float) );
+		sure[i] =(float*)malloc( 2 * sizeof(float) );
 		if( sure[i] == NULL )
 			printf( "Yetersiz bellek!" );
-			
+		
 	}
-	//ortalama icin gereken toplam bir toplam dizisi olusturduk
-	toplam=(float*)malloc(sizeof(float)*kac_kere);
-	if(!toplam)	
-		printf("Bellek yetersiz!");
-	for(i=0;i<kac_kere;i++)
-		toplam[i]=0;
-	
-*/	
-	kac_kere=10;
+
+
 	for(k=0;k<kac_kere;k++){	
 		//dizi atamasi
 		for(i=0;i<N;i++){
@@ -122,16 +116,15 @@ int main(int argc, char *argv[]) {
 		toplam[2]=toplam[2]+sure[k][2];
 	}
 
-	printf("Siralamar Tamamlandi.\n%d sayi iceren dizide\n",N);
-	printf("Merge Sort Ortalama %.3f surdu.\n",toplam[0]/10);
-	printf("Selection Sort Ortalama %.3f surdu.\n",toplam[1]/10);
-	printf("Bubble Sort Ortalama %.3f surdu.\n",toplam[2]/10);
+	printf("Siralamar Tamamlandi.\n%d sayi iceren dizi icin\n",N);
+	printf("Merge Sort Ortalama %.3f surdu.\n",toplam[0]/kac_kere);
+	printf("Selection Sort Ortalama %.3f surdu.\n",toplam[1]/kac_kere);
+	printf("Bubble Sort Ortalama %.3f surdu.\n",toplam[2]/kac_kere);
 	
 	getch();
 	free(temp_dizi);
 	free(sabit_dizi);
 	free(sure);
-	free(toplam);
 	return 0;
 }
 
@@ -225,4 +218,3 @@ void swap(int* a,int* b){
 	*a=*b;
 	*b=temp;
 }
-
