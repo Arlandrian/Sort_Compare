@@ -6,20 +6,26 @@
 
 /* run this program using the console pauser or add your own getch, system("pause") or input loop */
 void bubble(int *arr,int N );
+void selection(int *arr,int N);
 void swap(int *a,int *b);
 void merge(int *arr, int low, int mid, int high);
 void arr_print(int *arr,int N);
+void mergesort(int *arr, int low, int high);
 int main(int argc, char *argv[]) {
-	//Bütün surelerin tutuldugu matris 1. sutun merge,2.sutun selection,3.sutun Bubble **sure
-	float toplam[2]={0,0,0};
-	float **sure;
+
 	//N alinan sayi,ijk for donguler icin degiskenler,toplam ortalama hesaplamasi icin kullanilan dizi
 	int N,j,i,k,kac_kere;//kac_kere=>sortlari kac kere yapilacagini tutan degisken
-	int sort;
+	
 	int *temp_dizi,*sabit_dizi;
-	float basla,bitir;
+	//ortalamalari bulmak icin toplam süreleri tutacagimiz degiskenler
+	float selection_t=0,bubble_t=0,merge_t=0;
+	//basla bitir fonksiyonlardan once ve sonra zamani alip 
+	float basla,bitir,T;
+	char shutdown;
 	system("COLOR 02");
-	printf("N sayisini girin: \n");
+	printf("Program durduktan sonra bilgisayarin kapanmasini istermisiniz?(Y/N):");
+	scanf("%c",&shutdown);
+	printf("\nN sayisini girin: \n");
 	scanf("%d",&N);
 	srand(time(NULL));
 	//dizi siralandiktan sonra ayni diziyi baska 3 algoritmayla da siralamamiz icin eski diziyi 2. bir dizide tutmamiz gerekiyor(sabit dizi)...
@@ -35,20 +41,9 @@ int main(int argc, char *argv[]) {
 	printf("\n");
 	printf("Kac farkli sort suresi olcmek istersiniz?\n");
 	scanf("%d",&kac_kere);
-	//sureleri tutacagimiz matrisi olusturuyoruz(sure[kac_kere][2])
-	
-	sure=(float**)malloc(sizeof(float*)*kac_kere);
-	if(!kac_kere){
-		printf("bellek yetersiz");
-	}
-	for( i = 0; i < kac_kere; i++ ) {
-		sure[i] =(float*)malloc( 2 * sizeof(float) );
-		if( sure[i] == NULL )
-			printf( "Yetersiz bellek!" );
-		
-	}
 
-
+	printf("   Merge Sort     Selection Sort      Bubble Sort\n");
+	printf("-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-\n");
 	for(k=0;k<kac_kere;k++){	
 		//dizi atamasi
 		for(i=0;i<N;i++){
@@ -56,18 +51,15 @@ int main(int argc, char *argv[]) {
 			*(sabit_dizi+i)= *(temp_dizi+i);
 		//	printf("%d ",*(temp_dizi+i));//karisik diziyi gormek icin...
 		}
-		
-		printf("   Merge Sort     Selection Sort      Bubble Sort\n");
-	
 		//Merge_Sort
 		
 		basla=clock();
 		mergesort(temp_dizi,0,N);
 		bitir=clock();
-		sure[k][0]=(bitir-basla)/1000;
-		printf("%d-)%.3f sn",k+1,sure[k][0]);
+		T=(bitir-basla)/1000;
+		printf("%d-)%.3f sn",k+1,T);
 		//Merge sort icin toplam sure
-		toplam[0]=toplam[0]+sure[k][0];				
+		merge_t=merge_t+T;				
 
 		//sirali diziyi yazdirmak icin
 		/*
@@ -85,16 +77,16 @@ int main(int argc, char *argv[]) {
 		basla=clock();
 		selection(temp_dizi,N);
 		bitir=clock();
-		sure[k][1]=(bitir-basla)/1000;
+		T=(bitir-basla)/1000;
 		//sirali diziyi yazdirmak icin
 		/*
 		printf("\nSelection sirali dizi:\n");
 		arr_print(temp_dizi,N);
 		getch();
 		*/
-		printf("         %.3f sn",sure[k][1]);
+		printf("         %.3f sn",T);
 		//selection sort icin toplam sure
-		toplam[1]=toplam[1]+sure[k][1];	
+		selection_t=selection_t+T;	
 		for(i=0;i<N;i++){
 			*(temp_dizi+i) = *(sabit_dizi+i);
 		}
@@ -103,7 +95,7 @@ int main(int argc, char *argv[]) {
 		basla=clock();
 		bubble(temp_dizi,N);
 		bitir=clock();
-		sure[k][2]=(bitir-basla)/1000;
+		T=(bitir-basla)/1000;
 		//sirali diziyi yazdirmak icin
 		/*
 		printf("\nBubble sirali dizi:\n");
@@ -111,20 +103,26 @@ int main(int argc, char *argv[]) {
 		getch();
 		*/
 	
-		printf("           %.3f sn\n",sure[k][2]);
+		printf("           %.3f sn\n",T);
 		//Bubble Sort icin toplam sure
-		toplam[2]=toplam[2]+sure[k][2];
+		bubble_t=bubble_t+T;
 	}
 
 	printf("Siralamar Tamamlandi.\n%d sayi iceren dizi icin\n",N);
-	printf("Merge Sort Ortalama %.3f surdu.\n",toplam[0]/kac_kere);
-	printf("Selection Sort Ortalama %.3f surdu.\n",toplam[1]/kac_kere);
-	printf("Bubble Sort Ortalama %.3f surdu.\n",toplam[2]/kac_kere);
+	printf("Merge Sort Ortalama %.3f surdu.\n",merge_t/kac_kere);
+	printf("Selection Sort Ortalama %.3f surdu.\n",selection_t/kac_kere);
+	printf("Bubble Sort Ortalama %.3f surdu.\n",bubble_t/kac_kere);
 	
-	getch();
+	system("C:\\users\\alo_i\\Desktop\\Screenshot.bat /s");
+	
 	free(temp_dizi);
 	free(sabit_dizi);
-	free(sure);
+	printf("\n%c",shutdown);
+	if( shutdown == 'Y' || shutdown== 'y' ){
+		printf("Bilgisay Kapaniyor...");
+		system("C:\\WINDOWS\\System32\\shutdown.exe /s");
+	}
+		
 	return 0;
 }
 
